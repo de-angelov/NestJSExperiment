@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
+import { UserRO } from './user.ro';
 
 @Entity('user')
 export class UserEntity {
@@ -30,9 +31,9 @@ export class UserEntity {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  toResponseObject(showToken: boolean = true) {
+  toResponseObject(showToken: boolean = true): UserRO {
     const { id, created, username, token } = this;
-    const responseObject: any = { id, created, username };
+    const responseObject: UserRO = { id, created, username };
     if (showToken) {
       responseObject.token = token;
     }
