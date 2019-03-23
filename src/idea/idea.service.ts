@@ -32,7 +32,7 @@ export class IdeaService {
   }
 
   async create(userId: string, data: IdeaDTO): Promise<IdeaRO> {
-    const user = this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     const idea = await this.ideaRepository.create({ ...data, author: user });
     await this.ideaRepository.save(idea);
     return this.toResponseObject(idea);
@@ -55,14 +55,19 @@ export class IdeaService {
     userId: string,
     data: Partial<IdeaDTO>,
   ): Promise<IdeaRO> {
-    const idea = await this.ideaRepository.findOne({
+    let idea = await this.ideaRepository.findOne({
       where: { id },
       relations: ['author'],
     });
     if (!idea) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
+    this.ensureOwnership(idea, userId);
     await this.ideaRepository.update({ id }, data);
+    idea = await this.ideaRepository.findOne({
+      where: { id },
+      relations: ['author']
+    });
     return this.toResponseObject(idea);
   }
 
@@ -78,6 +83,6 @@ export class IdeaService {
     idea = await this.ideaRepository.findOne({
       where: { id },
     });
-    return idea;
+    return this.toResponseObject(idea);
   }
 }
