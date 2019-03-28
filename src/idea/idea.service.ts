@@ -76,7 +76,7 @@ export class IdeaService {
     await this.ideaRepository.update({ id }, data);
     idea = await this.ideaRepository.findOne({
       where: { id },
-      relations: ['author', 'upvotes', 'downvotes'];
+      relations: ['author', 'upvotes', 'downvotes'];    
     });
     return this.toResponseObject(idea);
   }
