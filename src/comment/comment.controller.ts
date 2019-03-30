@@ -12,11 +12,12 @@ export class CommentController {
 
   @Get('idea/:id')
   showCommentsByIdea(@Param('id') idea: string){
-
+    return this.commentService.showByIdea(idea);
   }
 
   @Get('user/:id')
   showCommentsByUser(@Param('id') user: string){
+    return this.commentService.showByUser(user);
   }
   
   @Post('idea/:id')
@@ -34,7 +35,7 @@ export class CommentController {
   @Delete(':id')
   @UseGuards(new AuthGuard())
   destoyComment(@Param('id') id: string, @User('id') user: string){
-
+    return this.commentService.destroy(id, user);
   }
 
 

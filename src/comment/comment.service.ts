@@ -14,14 +14,21 @@ export class CommentService {
     @InjectRepository(UserEntity) private userRepository: Repository<UserEntity> 
   ){}
 
+  private toResponseObject(comment: CommentEntity){
+    const responseObject: any = comment;
+    if (comment.author){
+      responseObject.author = comment.author.toResponseObject();
+    }
+    return responseObject;
+  }
+
   async showByIdea(id: string){
     const idea = await this.ideaRepository.findOne({
       where: {id},
-      relations: ['comments', 'comments.autor', 'comments.idea'];
+      relations: ['comments', 'comments.autor', 'comments.idea'],
     });
 
-    return idea.comments;
-
+    return idea.comments.map(comment => this.toResponseObject(comment));
   }
 
   async showByUser(id: string){
@@ -31,12 +38,12 @@ export class CommentService {
     });
 
 
-    return comments;
+    return comments.map(comment => this.toResponseObject(comment));
   }
 
   async show(id: string){
     const comment = await this.commentRepository.findOne({ where: {id}, relations: ['autor', 'idea']});
-    return comment;
+    return this.toResponseObject(comment);
   }
 
   async create(ideaId: string, userId: string, data: CommentDto){
@@ -50,7 +57,7 @@ export class CommentService {
     });
 
     await this.commentRepository.save(comment);
-    return comment;
+    return this.toResponseObject(comment);
   }
 
   async destroy(id: string, userId: string){
@@ -64,6 +71,6 @@ export class CommentService {
     }
 
     await this.commentRepository.remove(comment);
-    return comment;
+    return this.toResponseObject(comment);
   }
 }
