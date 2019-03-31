@@ -22,19 +22,32 @@ export class CommentService {
     return responseObject;
   }
 
-  async showByIdea(id: string){
-    const idea = await this.ideaRepository.findOne({
-      where: {id},
-      relations: ['comments', 'comments.autor', 'comments.idea'],
-    });
+  // alternative sintax
+  // async showByIdea(id: string){
+  //   const idea = await this.ideaRepository.findOne({
+  //     where: {id},
+  //     relations: ['comments', 'comments.autor', 'comments.idea'],
+  //   });
 
-    return idea.comments.map(comment => this.toResponseObject(comment));
+  //   return idea.comments.map(comment => this.toResponseObject(comment));
+  // }
+
+  async showByIdea(id: string, page: number = 1){
+    const comment = await this.commentRepository.find({
+      where: {idea: { id }},
+      relations: ['author'],
+      take: 25,
+      skip: 25 * (page-1)
+    })
   }
 
-  async showByUser(id: string){
+
+  async showByUser(id: string, page: number = 1){
     const comments = await this.commentRepository.find({
       where: { author: {id }},
-      relations: ['Author'],
+      relations: ['author'],
+      take: 25,
+      skip: 25 * (page-1)
     });
 
 
