@@ -40,7 +40,7 @@ export class UserEntity {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  @ManyToMany({type => IdeaEntity,{cascade: true})
+  @ManyToMany(type => IdeaEntity, {cascade: true})
   @JoinTable()
   bookmarks: IdeaEntity[];
 

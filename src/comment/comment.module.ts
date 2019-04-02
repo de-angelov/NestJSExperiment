@@ -4,6 +4,7 @@ import { IdeaEntity } from 'src/idea/idea.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
+import { CommentEntity } from './comment.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([IdeaEntity, UserEntity, CommentEntity])],

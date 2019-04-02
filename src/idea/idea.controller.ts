@@ -36,7 +36,7 @@ export class IdeaController {
 
   @Get('/newest')
   showNewestIdeas(@Query('page') page: number){
-
+    return this.ideaService.showAll(page, true);
   }
 
 
