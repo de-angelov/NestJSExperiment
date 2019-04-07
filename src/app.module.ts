@@ -11,15 +11,15 @@ import { CommentModule } from './comment/comment.module';
 import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
-  imports: 
-  [
-    TypeOrmModule.forRoot(), 
-    IdeaModule, 
-    UserModule, 
+  imports: [
+    TypeOrmModule.forRoot(),
+    IdeaModule,
+    UserModule,
     CommentModule,
     GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql']
-    })
+      typePaths: ['./**/*.graphql'],
+      context: ({ req }) => ({ headers: req.headers }),
+    }),
   ],
   controllers: [AppController],
   providers: [
